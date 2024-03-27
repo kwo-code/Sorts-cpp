@@ -62,16 +62,42 @@ void choiseSort(float arr[], int size) {
 }
 
 void shellSort(float arr[], int size) {
-    int n = sizeof(arr) / sizeof(arr[0]);
-    for (int gap = n / 2; gap > 0; gap /= 2) {
-        for (int i = gap; i < n; ++i) {
+    for (int interval = size / 2; interval > 0; interval /= 2) {
+        for (int i = interval; i < size; i++) {
             int temp = arr[i];
             int j;
-            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-                arr[j] = arr[j - gap];
+            for (j = i; j >= interval && arr[j - interval] > temp; j -= interval) {
+                arr[j] = arr[j - interval];
             }
             arr[j] = temp;
         }
+    }
+}
+
+int partition(float arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+
+    for (int j = low; j < high; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            float temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+    float temp = arr[i+1];
+    arr[i+1] = arr[high];
+    arr[high] = temp;
+
+    return i + 1;
+}
+
+void quickSort(float arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
     }
 }
 
@@ -120,6 +146,14 @@ int main() {
     shellSort(arrCopy, size);
     duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start); 
     std::cout << "\nShell sorting:\n";
+    std::cout << "Time: " << duration.count() << " microsec" << std::endl;
+    printArray(arrCopy, size);
+
+    copyArray(arr, arrCopy, size);
+    start = std::chrono::steady_clock::now();
+    quickSort(arrCopy, 0, sizeof(arr)/sizeof(arr[0])-1);
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start); 
+    std::cout << "\nQuick sorting:\n";
     std::cout << "Time: " << duration.count() << " microsec" << std::endl;
     printArray(arrCopy, size);
 
