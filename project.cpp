@@ -7,11 +7,14 @@ float getRandomFloat(float min, float max) {
     return floor(min + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (max - min))));
 }
 
-void printArray(float arr[], int size) {
-    for (int i = 0; i < size; ++i) {
+void printArray(float arr[], int size, int hide) {
+    if (hide != 1) {
+        for (int i = 0; i < size; ++i) {
         std::cout << arr[i] << " ";
     }
     std::cout << '\n';
+    }
+    
 }
 
 void copyArray(float arr[], float arrCopy[], int size) {
@@ -102,15 +105,12 @@ void quickSort(float arr[], int low, int high) {
 }
 
 int main() {
-    srand(time(0));
-
     int size;
+    int hide;
     std::cout << "Enter size of array: ";
     std::cin >> size;
-
-    int output = 0;
-    std::cout << "Output array?";
-    std::cin >> output;
+    std::cout << "Hide arr? 1/0: ";
+    std::cin >> hide;
 
     float *arr = new float[size];
     float *arrCopy = new float[size];
@@ -118,44 +118,44 @@ int main() {
         arr[i] = getRandomFloat(-1000.0f, 1000.0f);
     }
 
-    std::cout << "Source array:\n";
-    if(output > 0) printArray(arr, size);
+    if (hide != 1) std::cout << "Source array:\n";
+    
+    printArray(arr, size, hide);
 
     copyArray(arr, arrCopy, size);
     auto start = std::chrono::steady_clock::now();
     bubbleSort(arrCopy, size);
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start); 
     std::cout << "\nBubble sorting:\n Time: " << duration.count() << " microsec" << std::endl;
-    if(output > 0)printArray(arrCopy, size);
+    printArray(arrCopy, size, hide);
 
     copyArray(arr, arrCopy, size);
     start = std::chrono::steady_clock::now();
     insertsSort(arrCopy, size);
     duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start); 
     std::cout << "\nInsert sorting:\n Time: " << duration.count() << " microsec" << std::endl;
-    if(output > 0)printArray(arrCopy, size);
+    printArray(arrCopy, size, hide);
 
     copyArray(arr, arrCopy, size);
     start = std::chrono::steady_clock::now();
     choiseSort(arrCopy, size);
     duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start); 
     std::cout << "\nChoise sorting:\n Time: " << duration.count() << " microsec" << std::endl;
-    if(output > 0)printArray(arrCopy, size);
+    printArray(arrCopy, size, hide);
 
     copyArray(arr, arrCopy, size);
     start = std::chrono::steady_clock::now();
     shellSort(arrCopy, size);
     duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start); 
     std::cout << "\nShell sorting:\n Time: " << duration.count() << " microsec" << std::endl;
-    if(output > 0)printArray(arrCopy, size);
+    printArray(arrCopy, size, hide);
 
     copyArray(arr, arrCopy, size);
     start = std::chrono::steady_clock::now();
     quickSort(arrCopy, 0, size-1);
     duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start); 
     std::cout << "\nQuick sorting:\n Time: " << duration.count() << " microsec" << std::endl;
-    if(output > 0)printArray(arrCopy, size);
-
+    printArray(arrCopy, size, hide);
     system("pause");
     return 0;
 }
